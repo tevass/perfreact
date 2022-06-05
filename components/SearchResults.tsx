@@ -1,23 +1,54 @@
+import { List, ListRowRenderer } from 'react-virtualized'
 import { ProductItem } from "./ProductItem";
 
 interface SearchResultsProps {
+  totalPrice: number;
   results: Array<{
     id: number;
     price: number;
     title: string;
-  }>
+    priceFormatted: string;
+  }>;
+  onAddToWishlist: (id: number) => void;
 }
 
-export function SearchResults({ results }: SearchResultsProps) {
+export function SearchResults({ results, onAddToWishlist, totalPrice }: SearchResultsProps) {
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    return (
+      <div key={key} style={style}>
+        <ProductItem
+          product={results[index]}
+          onAddToWishlist={onAddToWishlist}
+        />
+      </div>
+    )
+  }
+
   return (
     <div>
-      { results.map(product => {
-        return (
-          <ProductItem
-            product={product}
-          />
-        )
-      }) }
+      <h2>{totalPrice}</h2>
+
+      <List
+        height={300}
+        rowHeight={30}
+        width={900}
+        overscanRowCount={5}
+        rowCount={results.length}
+        rowRenderer={rowRenderer}
+      /> 
     </div>
   )
 }
+
+/**
+ * 1. Criar uma nova versão do componente
+ * 2. Comparar com a versão anterior
+ * 3. Se houverem alterações, vai atualizar o que alterou
+ */
+
+/**
+ * useMemo
+ * 
+ * 1. Cálculos pesados
+ * 2. Igualdade referencial (quando a gente repassa aquela informação a um componente filho)
+ */
